@@ -21,6 +21,16 @@ class HomeScreen extends Component {
     newSubtasks: [],
   };
 
+  deleteTodo = (uniqueNo) => {
+    const { userTodoList } = this.state;
+    const filteredUsersData = userTodoList.filter(
+      (each) => each.uniqueNo !== uniqueNo
+    );
+    this.setState({
+      userTodoList: filteredUsersData,
+    });
+  };
+
   handleInputChange = (event) => {
     this.setState({
       [event.target.name]: event.target.value,
@@ -80,7 +90,11 @@ class HomeScreen extends Component {
             </div>
             <ul className="todosContainer">
               {userTodoList.map((each) => (
-                <TaskList todoDetails={each} key={each.uniqueNo} />
+                <TaskList
+                  todoDetails={each}
+                  key={each.uniqueNo}
+                  deleteTodo={this.deleteTodo}
+                />
               ))}
             </ul>
           </div>
