@@ -1,53 +1,73 @@
-import { Component } from 'react';
+import React, { Component } from 'react';
 import TaskList from '../components/TaskList/TaskList';
 import './HomeScreen.css';
 
-const initialTodoDetailsList = [
-  {
-    uniqueNo: 1,
-    title: 'Build UI for onboarding flow',
-    description: '',
-    subtasks: {
-      id: 1,
-      subtask: 'coffee',
-    },
-  },
-  {
-    uniqueNo: 1,
-    title: 'Build UI for onboarding flow',
-    description: '',
-    subtasks: {
-      id: 1,
-      subtask: 'coffee',
-    },
-  },
-  {
-    uniqueNo: 1,
-    title: 'Build UI for onboarding flow',
-    description: '',
-    subtasks: {
-      id: 1,
-      subtask: 'coffee',
-    },
-  },
-  {
-    uniqueNo: 1,
-    title: 'Build UI for onboarding flow',
-    description: '',
-    subtasks: {
-      id: 1,
-      subtask: 'coffee',
-    },
-  },
-];
-
 class HomeScreen extends Component {
   state = {
-    userTodoList: initialTodoDetailsList,
+    userTodoList: [
+      {
+        uniqueNo: 1,
+        title: 'Build UI for onboarding flow',
+        description: '',
+        subtasks: {
+          id: 1,
+          subtask: 'coffee',
+        },
+      },
+      // ... your other initial tasks
+    ],
+    newTaskTitle: '',
+    newTaskDescription: '',
+    newSubtasks: [],
+  };
+
+  handleInputChange = (event) => {
+    this.setState({
+      [event.target.name]: event.target.value,
+    });
+  };
+
+  handleAddSubtask = () => {
+    const { newSubtasks } = this.state;
+    this.setState({
+      newSubtasks: [...newSubtasks, ''],
+    });
+  };
+
+  handleSubtaskChange = (index, value) => {
+    const { newSubtasks } = this.state;
+    const updatedSubtasks = [...newSubtasks];
+    updatedSubtasks[index] = value;
+    this.setState({
+      newSubtasks: updatedSubtasks,
+    });
+  };
+
+  handleCreateTask = () => {
+    const { userTodoList, newTaskTitle, newTaskDescription, newSubtasks } =
+      this.state;
+
+    const newTask = {
+      uniqueNo: userTodoList.length + 1,
+      title: newTaskTitle,
+      description: newTaskDescription,
+      subtasks: newSubtasks.map((subtask, index) => ({
+        id: index + 1,
+        subtask,
+      })),
+    };
+
+    this.setState((prevState) => ({
+      userTodoList: [...prevState.userTodoList, newTask],
+      newTaskTitle: '',
+      newTaskDescription: '',
+      newSubtasks: [],
+    }));
   };
 
   render() {
-    const { userTodoList } = this.state;
+    const { userTodoList, newTaskTitle, newTaskDescription, newSubtasks } =
+      this.state;
     return (
       <div className="container-fluid">
         <div className="row">
@@ -55,7 +75,7 @@ class HomeScreen extends Component {
             <div className="todo-count d-flex flex-row justify-content-start align-items-center">
               <div className="dot"></div>
               <div className="todo-heading">
-                <h1 className="todo-heading">TODO (4)</h1>
+                <h1 className="todo-heading">TODO ({userTodoList.length})</h1>
               </div>
             </div>
             <ul className="todosContainer">
@@ -64,7 +84,6 @@ class HomeScreen extends Component {
               ))}
             </ul>
           </div>
-          {/* add new task */}
           <div className="container addNewTaskContainer col-6 pt-4 pb-3">
             <h1 className="taskTittleHeading">Add New Task</h1>
 
@@ -73,82 +92,85 @@ class HomeScreen extends Component {
               <input
                 className="takeTask"
                 type="text"
+                name="newTaskTitle"
+                value={newTaskTitle}
+                onChange={this.handleInputChange}
                 placeholder="e.g Take coffee break"
               />
             </div>
-            {/* desc */}
+
             <div className="taskDesc mb-5">
               <h1 className="addTaskHeading">Description</h1>
               <textarea
                 className="takeTask takeDesc"
                 rows={4}
+                name="newTaskDescription"
+                value={newTaskDescription}
+                onChange={this.handleInputChange}
                 placeholder="e.g Take coffee break for 15 min and feel free and then go for work again!"
               />
             </div>
-            {/* subtask */}
+
             <div className="takeSubtask mb-5">
               <h1 className="addTaskHeading">Subtasks</h1>
-              <div className="subtaskinputContainer mb-3">
-                <input
-                  className="takeTask subtaskinput"
-                  type="text"
-                  placeholder="e.g Take coffee break"
-                />
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="25"
-                  height="25"
-                  fill="currentColor"
-                  class="bi bi-x-lg"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z" />
-                </svg>
-              </div>
-              <div className="subtaskinputContainer mb-3">
-                <input
-                  className="takeTask subtaskinput"
-                  type="text"
-                  placeholder="e.g Take coffee break"
-                />
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="25"
-                  height="25"
-                  fill="currentColor"
-                  class="bi bi-x-lg"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z" />
-                </svg>
-              </div>
-              <button className="button white" type="submit">
+              {newSubtasks.map((subtask, index) => (
+                <div className="subtaskinputContainer mb-3" key={index}>
+                  <input
+                    className="takeTask subtaskinput"
+                    type="text"
+                    value={subtask}
+                    onChange={(e) =>
+                      this.handleSubtaskChange(index, e.target.value)
+                    }
+                    placeholder="e.g Take coffee break"
+                  />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="25"
+                    height="25"
+                    fill="currentColor"
+                    className="bi bi-x-lg"
+                    viewBox="0 0 16 16"
+                  >
+                    <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z" />
+                  </svg>
+                </div>
+              ))}
+              <button
+                className="button white"
+                type="button"
+                onClick={this.handleAddSubtask}
+              >
                 + Add New Subtask
               </button>
             </div>
-            {/* status */}
+
             <div className="takeStatus mb-5">
               <h1 className="addTaskHeading">Status</h1>
-              <div class="btn-group mb-3">
+              <div className="btn-group mb-3">
                 <button
                   type="button"
-                  class="btn btn-outline-secondary dropdown-toggle"
+                  className="btn btn-outline-secondary dropdown-toggle"
                   data-toggle="dropdown"
                   aria-haspopup="true"
-                  aria-expanded="true"
+                  aria-expanded="false"
                 >
                   Status of the Task
                 </button>
-                <div class="dropdown-menu dropdown-menu-right">
-                  <button class="dropdown-item selected" type="button">
+                <div className="dropdown-menu">
+                  <button className="dropdown-item selected" type="button">
                     ToDo
                   </button>
-                  <button class="dropdown-item" type="button">
+                  <button className="dropdown-item" type="button">
                     Completed
                   </button>
                 </div>
               </div>
-              <button className="button blue" type="submit">
+              <button
+                className="button blue"
+                type="button"
+                onClick={this.handleCreateTask}
+              >
                 Create Task
               </button>
             </div>
