@@ -1,8 +1,53 @@
 import { Component } from 'react';
-import './index.css';
+import TaskList from '../components/TaskList/TaskList';
+import './HomeScreen.css';
+
+const initialTodoDetailsList = [
+  {
+    uniqueNo: 1,
+    title: 'Build UI for onboarding flow',
+    description: '',
+    subtasks: {
+      id: 1,
+      subtask: 'coffee',
+    },
+  },
+  {
+    uniqueNo: 1,
+    title: 'Build UI for onboarding flow',
+    description: '',
+    subtasks: {
+      id: 1,
+      subtask: 'coffee',
+    },
+  },
+  {
+    uniqueNo: 1,
+    title: 'Build UI for onboarding flow',
+    description: '',
+    subtasks: {
+      id: 1,
+      subtask: 'coffee',
+    },
+  },
+  {
+    uniqueNo: 1,
+    title: 'Build UI for onboarding flow',
+    description: '',
+    subtasks: {
+      id: 1,
+      subtask: 'coffee',
+    },
+  },
+];
 
 class HomeScreen extends Component {
+  state = {
+    userTodoList: initialTodoDetailsList,
+  };
+
   render() {
+    const { userTodoList } = this.state;
     return (
       <div className="container-fluid">
         <div className="row">
@@ -14,22 +59,9 @@ class HomeScreen extends Component {
               </div>
             </div>
             <ul className="todosContainer">
-              <li className="todoItem">
-                <h1 className="Itemheading">Build UI for onbording flow</h1>
-                <p>0 out of 3 subtasks</p>
-              </li>
-              <li className="todoItem">
-                <h1 className="Itemheading">Build UI for onbording flow</h1>
-                <p>0 out of 3 subtasks</p>
-              </li>
-              <li className="todoItem">
-                <h1 className="Itemheading">Build UI for onbording flow</h1>
-                <p>0 out of 3 subtasks</p>
-              </li>
-              <li className="todoItem">
-                <h1 className="Itemheading">Build UI for onbording flow</h1>
-                <p>0 out of 3 subtasks</p>
-              </li>
+              {userTodoList.map((each) => (
+                <TaskList todoDetails={each} key={each.uniqueNo} />
+              ))}
             </ul>
           </div>
           {/* add new task */}

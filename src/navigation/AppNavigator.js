@@ -1,5 +1,5 @@
 import React from 'react';
-import HomeScreen from '../screens/HomeScreen/HomeScreen';
+import HomeScreen from '../screens/HomeScreen';
 
 const AppNavigator = () => {
   return <HomeScreen />;

@@ -1,0 +1,13 @@
+.Itemheading {
+  font-size: 18px;
+  color: #fbfbfd;
+}
+.todoItem {
+  width: 100%;
+  padding: 20px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  flex-grow: 1;
+  background-color: rgba(31, 41, 51, 0.8);
+  border-radius: 15px;
+}
