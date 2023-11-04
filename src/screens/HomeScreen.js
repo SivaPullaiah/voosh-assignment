@@ -14,6 +14,7 @@ class HomeScreen extends Component {
       newTaskTitle: '',
       newTaskDescription: '',
       newSubtasks: [],
+      newTaskStatus: 'ToDo',
     };
   }
 
@@ -36,14 +37,21 @@ class HomeScreen extends Component {
   };
 
   handleCreateTask = () => {
-    const { userTodoList, newTaskTitle, newTaskDescription, newSubtasks } =
-      this.state;
+    const {
+      userTodoList,
+      newTaskTitle,
+      newTaskDescription,
+      newSubtasks,
+      newTaskStatus,
+    } = this.state;
 
     // Check if the newTaskTitle is empty
     if (!newTaskTitle) {
       alert('Task title is mandatory!');
       return; // Exit the function if title is empty
     }
+
+    const status = newTaskStatus || 'ToDo'; // Use "ToDo" if newTaskStatus is not specified
 
     const newTask = {
       uniqueNo: userTodoList.length + 1,
@@ -53,6 +61,7 @@ class HomeScreen extends Component {
         id: index + 1,
         subtask,
       })),
+      status: status,
     };
 
     this.setState((prevState) => ({
@@ -78,6 +87,12 @@ class HomeScreen extends Component {
     });
   };
 
+  handleStatusChange = (event) => {
+    this.setState({
+      newTaskStatus: event.target.value,
+    });
+  };
+
   componentDidUpdate() {
     // Whenever the component updates, save the tasks to localStorage
     const { userTodoList } = this.state;
@@ -85,8 +100,13 @@ class HomeScreen extends Component {
   }
 
   render() {
-    const { userTodoList, newTaskTitle, newTaskDescription, newSubtasks } =
-      this.state;
+    const {
+      userTodoList,
+      newTaskTitle,
+      newTaskDescription,
+      newSubtasks,
+      newTaskStatus,
+    } = this.state;
     return (
       <div className="container-fluid">
         <div className="row">
@@ -104,6 +124,7 @@ class HomeScreen extends Component {
                   key={each.uniqueNo}
                   deleteTodo={this.deleteTodo}
                   subtasks={each.subtasks}
+                  status={each.status}
                 />
               ))}
             </ul>
@@ -173,23 +194,15 @@ class HomeScreen extends Component {
             <div className="takeStatus mb-5">
               <h1 className="addTaskHeading">Status</h1>
               <div className="btn-group mb-3">
-                <button
-                  type="button"
-                  className="btn btn-outline-secondary dropdown-toggle"
-                  data-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
+                <select
+                  value={newTaskStatus}
+                  onChange={this.handleStatusChange}
+                  className="form-select"
                 >
-                  Status of the Task
-                </button>
-                <div className="dropdown-menu">
-                  <button className="dropdown-item selected" type="button">
-                    ToDo
-                  </button>
-                  <button className="dropdown-item" type="button">
-                    Completed
-                  </button>
-                </div>
+                  <option value="ToDo">ToDo</option>
+                  <option value="Completed">Completed</option>
+                  <option value="Pending">Pending</option>
+                </select>
               </div>
               <button
                 className="button blue"

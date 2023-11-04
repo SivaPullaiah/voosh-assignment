@@ -1,17 +1,28 @@
 import './index.css';
 const TaskList = (props) => {
-  const { todoDetails, deleteTodo, subtasks } = props;
-  const { title, uniqueNo } = todoDetails;
+  const { todoDetails, deleteTodo, subtasks, status } = props;
+  const { title, description, uniqueNo } = todoDetails;
 
   console.log(subtasks.value);
   const onDelete = () => {
     deleteTodo(uniqueNo);
   };
 
+  const BgColor =
+    status === 'ToDo'
+      ? 'bg-warning'
+      : status === 'Completed'
+      ? 'bg-success'
+      : 'bg-info';
+
   return (
     <li className="todoItem">
       <div>
-        <h1 className="Itemheading">{title}</h1>
+        <div className="titil-status">
+          <h1 className="Itemheading">{title}</h1>
+          <p className={`${BgColor} status`}></p>
+        </div>
+        {description && <p className="truncate">{description}</p>}
         {subtasks.map((subtask, index) => (
           <p key={index}>{subtask.subtask}</p>
         ))}
