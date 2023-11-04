@@ -1,8 +1,9 @@
 import './index.css';
 const TaskList = (props) => {
-  const { todoDetails, deleteTodo } = props;
+  const { todoDetails, deleteTodo, subtasks } = props;
   const { title, uniqueNo } = todoDetails;
 
+  console.log(subtasks.value);
   const onDelete = () => {
     deleteTodo(uniqueNo);
   };
@@ -11,7 +12,9 @@ const TaskList = (props) => {
     <li className="todoItem">
       <div>
         <h1 className="Itemheading">{title}</h1>
-        <p>0 out of 3 subtasks</p>
+        {subtasks.map((subtask, index) => (
+          <p key={index}>{subtask.subtask}</p>
+        ))}
       </div>
       <div onClick={onDelete}>
         <svg

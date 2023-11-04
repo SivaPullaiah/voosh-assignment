@@ -3,23 +3,19 @@ import TaskList from '../components/TaskList/TaskList';
 import './HomeScreen.css';
 
 class HomeScreen extends Component {
-  state = {
-    userTodoList: [
-      {
-        uniqueNo: 1,
-        title: 'Build UI for onboarding flow',
-        description: '',
-        subtasks: {
-          id: 1,
-          subtask: 'coffee',
-        },
-      },
-      // ... your other initial tasks
-    ],
-    newTaskTitle: '',
-    newTaskDescription: '',
-    newSubtasks: [],
-  };
+  constructor(props) {
+    super(props);
+
+    // Check if tasks are stored in localStorage
+    const storedTasks = JSON.parse(localStorage.getItem('userTodoList'));
+
+    this.state = {
+      userTodoList: storedTasks || [], // If there are stored tasks, use them, otherwise use an empty array
+      newTaskTitle: '',
+      newTaskDescription: '',
+      newSubtasks: [],
+    };
+  }
 
   deleteTodo = (uniqueNo) => {
     const { userTodoList } = this.state;
@@ -31,31 +27,23 @@ class HomeScreen extends Component {
     });
   };
 
+  // ... Other methods remain the same
   handleInputChange = (event) => {
+    const { name, value } = event.target;
     this.setState({
-      [event.target.name]: event.target.value,
-    });
-  };
-
-  handleAddSubtask = () => {
-    const { newSubtasks } = this.state;
-    this.setState({
-      newSubtasks: [...newSubtasks, ''],
-    });
-  };
-
-  handleSubtaskChange = (index, value) => {
-    const { newSubtasks } = this.state;
-    const updatedSubtasks = [...newSubtasks];
-    updatedSubtasks[index] = value;
-    this.setState({
-      newSubtasks: updatedSubtasks,
+      [name]: value,
     });
   };
 
   handleCreateTask = () => {
     const { userTodoList, newTaskTitle, newTaskDescription, newSubtasks } =
       this.state;
+
+    // Check if the newTaskTitle is empty
+    if (!newTaskTitle) {
+      alert('Task title is mandatory!');
+      return; // Exit the function if title is empty
+    }
 
     const newTask = {
       uniqueNo: userTodoList.length + 1,
@@ -74,6 +62,27 @@ class HomeScreen extends Component {
       newSubtasks: [],
     }));
   };
+  handleAddSubtask = () => {
+    const { newSubtasks } = this.state;
+    this.setState({
+      newSubtasks: [...newSubtasks, ''],
+    });
+  };
+
+  handleSubtaskChange = (index, value) => {
+    const { newSubtasks } = this.state;
+    const updatedSubtasks = [...newSubtasks];
+    updatedSubtasks[index] = value;
+    this.setState({
+      newSubtasks: updatedSubtasks,
+    });
+  };
+
+  componentDidUpdate() {
+    // Whenever the component updates, save the tasks to localStorage
+    const { userTodoList } = this.state;
+    localStorage.setItem('userTodoList', JSON.stringify(userTodoList));
+  }
 
   render() {
     const { userTodoList, newTaskTitle, newTaskDescription, newSubtasks } =
@@ -94,6 +103,7 @@ class HomeScreen extends Component {
                   todoDetails={each}
                   key={each.uniqueNo}
                   deleteTodo={this.deleteTodo}
+                  subtasks={each.subtasks}
                 />
               ))}
             </ul>
@@ -150,6 +160,7 @@ class HomeScreen extends Component {
                   </svg>
                 </div>
               ))}
+
               <button
                 className="button white"
                 type="button"
